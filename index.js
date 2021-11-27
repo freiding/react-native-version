@@ -228,7 +228,7 @@ function version(program, projectPath) {
 			if (!programOpts.incrementBuild) {
 				gradleFile = gradleFile.replace(
 					/BUILD_VERSION_NAME=(.*)/,
-					"BUILD_VERSION_NAME=$1" + appPkg.version + "$1"
+					"BUILD_VERSION_NAME=" + appPkg.version
 				);
 			}
 
