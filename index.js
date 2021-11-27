@@ -33,7 +33,7 @@ const env = {
  */
 function getDefaults() {
 	return {
-		android: "android/app/build.gradle",
+		android: "android/app/gradle.properties",
 		ios: "ios"
 	};
 }
@@ -224,10 +224,10 @@ function version(program, projectPath) {
 					]);
 			}
 
-			if (!programOpts.incrementBuild && !isExpoApp) {
+			if (!programOpts.incrementBuild) {
 				gradleFile = gradleFile.replace(
-					/versionName (["'])(.*)["']/,
-					"versionName $1" + appPkg.version + "$1"
+					/BUILD_VERSION_NUMBER=(["'])(.*)["']/,
+					"BUILD_VERSION_NUMBER=$1" + appPkg.version + "$1"
 				);
 			}
 
@@ -246,27 +246,27 @@ function version(program, projectPath) {
 							})
 						})
 					});
-				} else {
-					gradleFile = gradleFile.replace(/versionCode (\d+)/, function(
-						match,
-						cg1
-					) {
-						const newVersionCodeNumber = getNewVersionCode(
-							programOpts,
-							parseInt(cg1, 10),
-							appPkg.version
-						);
-
-						return "versionCode " + newVersionCodeNumber;
-					});
 				}
+
+				gradleFile = gradleFile.replace(/BUILD_VERSION_CODE=(\d+)/, function(
+					match,
+					cg1
+				) {
+					const newVersionCodeNumber = getNewVersionCode(
+						programOpts,
+						parseInt(cg1, 10),
+						appPkg.version
+					);
+
+					return "BUILD_VERSION_CODE=" + newVersionCodeNumber;
+				});
 			}
 
 			if (isExpoApp) {
 				fs.writeFileSync(appJSONPath, JSON.stringify(appJSON, null, 2));
-			} else {
-				fs.writeFileSync(programOpts.android, gradleFile);
 			}
+
+			fs.writeFileSync(programOpts.android, gradleFile);
 
 			log({ text: "Android updated" }, programOpts.quiet);
 			resolve();
