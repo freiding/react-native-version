@@ -33,7 +33,7 @@ const env = {
  */
 function getDefaults() {
 	return {
-		android: "android/app/gradle.properties",
+		android: "android/gradle.properties",
 		ios: "ios"
 	};
 }
